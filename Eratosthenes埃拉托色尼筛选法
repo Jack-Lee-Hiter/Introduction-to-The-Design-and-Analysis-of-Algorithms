@@ -1,0 +1,46 @@
+import UIKit
+/*埃拉托色尼筛选法 写出不大于n的所有素数*/
+func Eratosthenes(Input:Int) -> [Int]{
+    var Array = [Int](), L = [Int]()
+    Array = [0,0]
+    let n = Input
+    var j = 0, m = 0
+   
+    if n <= 1{
+        return [0]
+    }else{
+        let sqrtn = Int(sqrt(Double(n)))
+        for p in 2...n{
+            Array.append(p)                 //不能写作Array[p]=p, 会报错。
+        }
+        
+        for p in 2...sqrtn{
+            if Array[p] != 0{
+                j = p * p
+                while j <= n{
+                    Array[j] = 0
+                    j = j + p
+                }
+            }
+        }
+        for p in 2...n{
+            if Array[p] != 0{
+                L.append(Array[p])
+                m = m + 1
+            }
+        }
+        return L
+    }
+}
+func Output(ans:Int){
+    let lastout = Eratosthenes(ans)
+    
+    if lastout == [0]{
+        print("A wrong input!")
+    }else{
+        print("the answer is \(lastout)")
+    }
+}
+var test = Eratosthenes(15)            //[2, 3, 5, 7, 11, 13]
+var answer = Output
+answer(-10)                            //A wrong input!
