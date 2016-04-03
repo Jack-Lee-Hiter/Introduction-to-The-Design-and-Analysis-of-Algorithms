@@ -1,0 +1,62 @@
+//求阶乘
+import UIKit
+
+func multi(A:Int) -> Int{
+    //let n = A
+    if A == 0{
+        return 1
+    } else {
+        return multi(A-1)*A
+    }
+}
+var ans = multi(3)
+
+//汉诺塔
+import UIKit
+func hanoi(a:String,b:String,c:String,n:Int){
+    
+    if n == 1{
+        print("move the \(n) disk from \(a) to \(c)")
+    }else{
+        hanoi(a,b:c,c:b,n:n-1)
+        print("move the \(n) disk from \(a) to \(c)")
+        hanoi(b,b:a,c:c,n:n-1)
+        
+    }
+}
+hanoi("A",b:"B",c:"C",n:4)
+
+import UIKit
+//受限汉诺塔
+func hanoi(a:String,b:String,c:String,n:Int){
+    
+    if n == 1{
+        print("move the \(n) disk from \(a) to \(b)")
+        print("move the \(n) disk from \(b) to \(c)")
+    }else{
+        hanoi(a,b:b,c:c,n:n-1)
+        print("move the \(n) disk from \(a) to \(b)")
+        hanoi(c,b:b,c:a,n:n-1)
+        print("move the \(n) disk from \(b) to \(c)")
+        hanoi(a,b:b,c:c,n:n-1)
+        
+    }
+}
+hanoi("A",b:"B",c:"C",n:3)
+
+//找到一个数组的最小值 用递归的方法
+func Riddle(A:[Int]) -> Int{
+    var array = A       //必须将A赋值给array，因为默认A为常量，不能进行删除操作
+    if array.count == 1{
+        return array[0]
+    }else{
+        let last = array.removeLast()
+        let temp = Riddle(array)
+        if temp <= last {
+            return temp
+        }else{
+            return last
+        }
+    }
+}
+let n = Riddle([1,2,3,5,0,7])
