@@ -1,0 +1,32 @@
+//找出两个列表中所有相同元素
+import UIKit
+func findSame(m:[Int],n:[Int]) -> [Int]{
+    var output = [Int](), first = [Int](), second = [Int]()
+    first = m        //必须用变量first代替m，因为m默认是常量，或者在函数最初声明输入写上var
+    second = n
+    
+    for i in first{
+        for j in second{
+            if i==j{
+                output.append(i)
+                first.removeAtIndex(first.indexOf(i)!)
+                second.removeAtIndex(second.indexOf(j)!)
+                
+            }
+        }
+    }
+    //下面算法无法编译成功
+    /*for i in 0...(first.count-1){
+        for j in 0...(second.count-1){
+            if first[i] == second[j]{
+                output.append(first[i])
+                first.removeAtIndex(i)
+                second.removeAtIndex(j)
+                
+            }
+        }
+    }*/
+    return output
+}
+var test = findSame
+test([2,2,5,5,7],n:[2,5,5,9,7,8,0])   //output:[2,5,5,7]
