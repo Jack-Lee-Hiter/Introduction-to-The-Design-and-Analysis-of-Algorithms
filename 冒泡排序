@@ -1,0 +1,42 @@
+func BubbleSort(A:[Int]) -> [Int]{
+    var array = A
+    let n = array.count
+    for i in 0...n-2{
+        for j in 0...n-2-i {
+            if array[j+1] < array[j]{
+                swap(&array[j], &array[j+1])
+            }
+        }
+        print(array)
+    }
+    return array
+}
+let n = BubbleSort([1,8,5,3,1,7,4,6,9,2,1,4,51])
+
+import UIKit
+//对输入的一串字符串进行字符的字典序冒泡排序
+//Exercise 3.1.8
+func BubbleSort(A:String)->String{
+    var str = A
+    let num = str.characters.count
+    var array = [Character]()
+    for character in str.characters {
+        array.append(character)
+    }
+    var sflag = true
+    while sflag {
+        sflag = false
+        for i in 0...num-2 {
+            for j in 0...num-2-i{
+                if array[j+1] < array[j] {
+                    swap(&array[j+1],&array[j])
+                    sflag = true
+                }
+            }
+        }
+    }
+    
+    str = String(array)
+    return str
+}
+let output = BubbleSort("EXAMPLE")
