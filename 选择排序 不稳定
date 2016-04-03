@@ -1,0 +1,69 @@
+//选择排序，一种错误代码
+//This is wrong!!!!!!!!!!!!!!!!!!
+import UIKit
+func SelectionSort(A:[Int]) -> [Int]{
+    var array = A
+    let n = array.count
+    for i in 0...n-2{
+        var min = i
+        for j in i+1...n-1 {
+            if array[j] < array[min]{
+                min = j
+            }
+        }
+        swap(&array[min], &array[i])   //fatal error: swapping a location with itself is not supported
+    }
+    return array
+}
+let n = SelectionSort([11,1,2,5,8,4,6,7,10])    //错误原因，如果当前选中的数字恰巧为该新数组中的最小值，那么min=i，但是swap语句不支持对于自身的交换。
+
+
+import UIKit
+//This is right!!!!
+func SelectionSort(A:[Int]) -> [Int]{
+    var array = A
+    let n = array.count
+    for i in 0...n-2{
+        var min = i
+        for j in i+1...n-1 {
+            if array[j] < array[min]{
+                min = j
+            }
+        }
+        if min != i {
+            swap(&array[min], &array[i])
+        }
+        //也可使用自己编写的交换算法
+        //let temp = array[min]       
+        //array[min] = array[i]
+        //array[i] = temp
+    }
+    return array
+}
+let n = SelectionSort([11,1,2,5,8,4,6,7,10])
+
+import UIKit
+//对输入的一串字符串进行字符的字典序选择排序
+//Exercise 3.1.8
+func SelectionSort(A:String)->String{
+    var str = A
+    let num = str.characters.count
+    var array = [Character]()
+    for character in str.characters {
+        array.append(character)
+    }
+    for i in 0...num-2 {
+        var min = i
+        for j in i...num-1{
+            if array[j] < array[min] {
+                min = j
+            }
+        }
+        if min != i {
+            swap(&array[min], &array[i])
+        }
+    }
+    str = String(array)
+    return str
+}
+let output = SelectionSort("EXAMPLE")
