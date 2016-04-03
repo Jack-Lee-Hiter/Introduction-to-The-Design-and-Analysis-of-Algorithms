@@ -1,0 +1,21 @@
+mport UIKit
+//对输入的一串字符串进行顺序查找某个单词
+func SequentialSearch(A:String,B:String)->[Int]{
+    var str = A
+    let target = B
+    str = str + " " + target
+    let array = str.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString:" ,"))
+    let num = array.count
+    var location = [Int]()
+    for i in 0...num-1 {
+        if target == array[i] && i < num-1{
+            location.append(i)
+        }
+    }
+    if location == []{
+        location = [-1]
+    }
+    return location
+}
+let output = SequentialSearch("Nice to meet you where you been I could show you incredible things,Magic madness heaven sin Saw you there and I thought Oh my God look at that face You look like my next mistake Love's a game wanna play",B:"look")
+
