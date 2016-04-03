@@ -1,0 +1,31 @@
+//欧几里得算法查找最大公约数
+import UIKit
+func Gdc(m:Int, n:Int) -> Int{
+    var mn_min = min(m, n)
+    var mn_max = max(m, n)
+    var Stack = 0
+    
+    while mn_min != 0{
+        Stack = mn_max % mn_min
+        mn_max = mn_min
+        mn_min = Stack
+    }
+    return mn_max
+}
+var answer = Gdc(100, n: 88)                //4
+
+//扩展欧几里得算法
+func exGcd(m:Int, n:Int) -> [Int]{
+    if n == 0{
+        let x = 1
+        let y = 0
+        return [x,y]
+    }else{
+        var result = exGcd(n, n: m%n)
+        let temp = result[0]
+        result[0] = result[1]
+        result[1] = temp - m/n * result[1]
+        return result
+    }
+}
+var result = exGcd(25, n: 10)       //输出[1,-2]
