@@ -1,0 +1,13 @@
+import UIKit
+func Fibo(n:Int)->Int{
+    var array = [Int](count:2,repeatedValue:0)
+    array[0] = 1
+    array[1] = 2
+    if n >= 2 {     //需要加上这句话，因为如果n=1或0，无法完成 for i in 2...n
+        for i in 2...n {
+            array[i%2] = array[0] + array[1]
+        }
+    }
+    return array[n%2]
+}
+let total = Fibo(0)
