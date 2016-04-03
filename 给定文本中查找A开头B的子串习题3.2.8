@@ -1,0 +1,63 @@
+//查找A开头B结尾的不相交的子串的数
+import UIKit
+func BruteForceStringMatch(A:String,B:String)->Int{
+    var str = [Character]()
+    var target = [Character]()
+    var count = 0
+    for i in A.characters {
+        str.append(i)
+    }
+    for j in B.characters {
+        target.append(j)
+    }
+    let n = str.count
+    for i in 0...n-2 {
+        if str[i] == target[0]{
+            for j in 1...n-1-i  {
+                if str[i+j] == target[1]{
+                    count = count + 1
+                }
+            }
+        }
+    }
+    
+    return count
+}
+let output = BruteForceStringMatch("CABAAXBYA",B:"AB")
+//output:4 1-2 1-6 3-6 4-6
+
+import UIKit
+//查找A开头B结尾的不相交的子串的数量
+func BruteForceStringMatch(A:String,B:String)->Int{
+    var str = [Character]()
+    var target = [Character]()
+    var count = 0
+    for i in A.characters {
+        str.append(i)
+    }
+    for j in B.characters {
+        target.append(j)
+    }
+    let n = str.count
+    //var pace = 0
+    for var i = 0; i <= n-2;{
+        var pace = 0
+        if str[i] == target[0]{
+            for m in 1...n-1-i  {
+                if str[i+m] == target[1]{
+                    count = count + 1
+                    pace = m
+                    
+                    break
+                }
+            }
+        }
+        if pace == 0{
+            i = i + 1
+        }else{
+            i = i + pace
+        }
+    }
+    return count
+}
+let output = BruteForceStringMatch("CABAAXBYA",B:"AB")
