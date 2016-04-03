@@ -1,0 +1,26 @@
+import UIKit
+//蛮力字符串匹配
+func BruteForceStringMatch(A:String,B:String)->Int{
+    var str = [Character]()
+    var target = [Character]()
+    for i in A.characters {
+        str.append(i)
+    }
+    for j in B.characters {
+        target.append(j)
+    }
+    let n = str.count
+    let m = target.count
+    for i in 0...n-m{
+        var j = 0
+        while j < m && target[j] == str[i+j] {
+            j = j+1
+            if j == m {
+                return i
+            }
+        }
+    }
+    return -1
+}
+let output = BruteForceStringMatch("Nice to meet you",B:"you")
+//output:13
