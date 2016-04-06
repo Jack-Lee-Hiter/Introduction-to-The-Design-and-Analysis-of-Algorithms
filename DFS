@@ -1,0 +1,128 @@
+//用栈来跟踪深度优先查找比较方便。对该顶点访问时入栈，结束访问时出栈。
+
+import UIKit
+//生成一个邻接矩阵用于表示无向图，输出DFS结果
+//实现一个图的类
+class Graph{
+    var mVexNum = Int()                 //顶点数
+    var mVertex = [String]()            //顶点集合
+    var mEdgNum = Int()                 //边数
+    var adj = Array<Array<Int>>()       //邻接矩阵
+    
+    //对图进行初始化
+    init(numberofVertices:Int,numberofEdges:Int,vertexname:[String],edges:Array<Array<String>>){
+        //初始化 顶点数 和 边数
+        mVexNum = numberofVertices
+        mEdgNum = numberofEdges
+        //初始化顶点
+        for i in 0...mVexNum-1 {
+            mVertex.append(vertexname[i])
+        }
+        //初始化邻接矩阵 也就是边
+        adj = Array<Array<Int>>(count:numberofVertices, repeatedValue:[Int](count:numberofVertices,repeatedValue:0))
+        
+        for i in 0...mEdgNum-1 {
+            //读取边的起点和终点
+            let p1 = getPosition(edges[i][0])
+            let p2 = getPosition(edges[i][1])
+            
+            adj[p1][p2] = 1
+            adj[p2][p1] = 1         //若为有向图则注释掉该句话
+        }
+    }
+    //返回ch在adj中的位置
+    func getPosition(ch:String) -> Int {
+        for i in 0...mVexNum-1{
+            if mVertex[i] == ch {
+                return i
+            }
+        }
+        return -1
+    }
+    
+    //返回v的第一个邻接顶点的索引，失败则返回-1
+    func firstVertex(v:Int) -> Int {
+        if v < 0 || v > mVexNum-1 {
+            return -1
+        }
+        for i in 0...mVexNum-1 {
+            if adj[v][i] == 1{
+                return i
+            }
+        }
+        return -1
+    }
+    
+    //返回顶点v相对于w的下一个顶点的索引，失败则返回-1
+    func nextVertex(v:Int, w:Int) -> Int {
+        if v < 0 || v > mVexNum-1 || w < 0 || w > mVexNum-1{
+            return -1
+        }
+        if w+1 <= mVexNum-1{
+            for i in w+1...mVexNum-1 {
+                if adj[v][i] == 1{
+                    return i
+                }
+            }
+        }
+        return -1
+    }
+    
+    //实现深度优先查找遍历
+    func DFS() {
+        var visited = [Int]()       //顶点访问标记
+        
+        //初始化所有顶点都没有被访问
+        for _ in 0...mVexNum-1 {
+            visited.append(0)
+        }
+        
+        print("DFS: ",terminator:"")
+        for i in 0...mVexNum-1 {
+            if visited[i] != 1{
+                DFS(i, visited: &visited)
+            }
+        }
+    }
+    func DFS(i:Int, inout visited:[Int]) {
+        var w = Int()
+        
+        visited[i] = 1;
+        print("\(mVertex[i])"+" ",terminator:"")
+        //遍历该顶点的所有邻接顶点，若是没访问过，继续往下走
+        for w = firstVertex(i); w >= 0 ; w = nextVertex(i, w: w) {
+            if visited[w] != 1 {
+                DFS(w, visited: &visited)
+            }
+        }
+        
+    }
+    
+    func  printans() {
+        print("Matrix Graph:")
+        for i in 0...mVexNum-1 {
+            for j in 0...mVexNum-1 {
+                print("\(adj[i][j]) ",terminator:"")
+            }
+            print("")
+        }
+    }
+}
+var vertices = ["A","B","C","D","E","F","G"]
+var edge = [["A","C"],["A","D"],["A","F"],["B","C"],["C","D"],["E","G"],["F","G"]]
+var vexNum = vertices.count
+var edgeNum = edge.count
+let graphDFS = Graph(numberofVertices: vexNum, numberofEdges: edgeNum, vertexname: vertices, edges: edge)
+graphDFS.printans()
+graphDFS.DFS()
+
+//output
+//Matrix Graph:
+//0 0 1 1 0 1 0 
+//0 0 1 0 0 0 0 
+//1 1 0 1 0 0 0 
+//1 0 1 0 0 0 0 
+//0 0 0 0 0 0 1 
+//1 0 0 0 0 0 1 
+//0 0 0 0 1 1 0 
+//DFS: A C B D F G E
