@@ -1,0 +1,130 @@
+//用队列来跟踪广度优先查找比较方便。
+//: Playground - noun: a place where people can play
+import UIKit
+//生成一个邻接矩阵用于表示无向图，输出BFS结果
+//实现一个图的类
+class Graph{
+    var mVexNum = Int()                 //顶点数
+    var mVertex = [String]()            //顶点集合
+    var mEdgNum = Int()                 //边数
+    var adj = Array<Array<Int>>()       //邻接矩阵
+
+    
+    //对图进行初始化
+    init(numberofVertices:Int,numberofEdges:Int,vertexname:[String],edges:Array<Array<String>>){
+        //初始化 顶点数 和 边数
+        mVexNum = numberofVertices
+        mEdgNum = numberofEdges
+        //初始化顶点
+        for i in 0...mVexNum-1 {
+            mVertex.append(vertexname[i])
+        }
+        //初始化邻接矩阵 也就是边
+        adj = Array<Array<Int>>(count:numberofVertices, repeatedValue:[Int](count:numberofVertices,repeatedValue:0))
+        
+        for i in 0...mEdgNum-1 {
+            //读取边的起点和终点
+            let p1 = getPosition(edges[i][0])
+            let p2 = getPosition(edges[i][1])
+            
+            adj[p1][p2] = 1
+            adj[p2][p1] = 1         //若为有向图则注释掉该句话
+        }
+    }
+
+    //返回ch在adj中的位置
+    func getPosition(ch:String) -> Int {
+        for i in 0...mVexNum-1{
+            if mVertex[i] == ch {
+                return i
+            }
+        }
+        return -1
+    }
+    
+    //返回v的第一个邻接顶点的索引，失败则返回-1
+    func firstVertex(v:Int) -> Int {
+        if v < 0 || v > mVexNum-1 {
+            return -1
+        }
+        for i in 0...mVexNum-1 {
+            if adj[v][i] == 1{
+                return i
+            }
+        }
+        return -1
+    }
+    
+    //返回顶点v相对于w的下一个顶点的索引，失败则返回-1
+    func nextVertex(v:Int, w:Int) -> Int {
+        if v < 0 || v > mVexNum-1 || w < 0 || w > mVexNum-1{
+            return -1
+        }
+        if w+1 <= mVexNum-1{
+            for i in w+1...mVexNum-1 {
+                if adj[v][i] == 1{
+                    return i
+                }
+            }
+        }
+        return -1
+    }
+    
+    //实现广度优先查找遍历
+    func BFS() {
+        var visited = [Int](count:mVexNum,repeatedValue:0)      //顶点访问标记
+        var queue = [Int](count:mVexNum+1,repeatedValue:0)
+        var head = 0
+        var rear = 0
+        print("BFS: ",terminator:"")
+        
+        for i in 0...mVexNum-1 {
+            if visited[i] != 1{
+                visited[i] = 1
+                print("\(mVertex[i]) ",terminator:"")
+                queue[rear++] = i
+            }
+            while head != rear {
+                let j = queue[head++]
+                for var k = firstVertex(j); k >= 0; k = nextVertex(j, w: k) {
+                    if visited[k] != 1{
+                        visited[k] = 1
+                        print("\(mVertex[k]) ",terminator:"")
+                        queue[rear++] = k
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func  printans() {
+        print("Matrix Graph:")
+        for i in 0...mVexNum-1 {
+            for j in 0...mVexNum-1 {
+                print("\(adj[i][j]) ",terminator:"")
+            }
+            print("")
+        }
+    }
+}
+
+var vertices = ["A","B","C","D","E","F","G"]
+var edge = [["A","C"],["A","D"],["A","F"],["B","C"],["C","D"],["E","G"],["F","G"]]
+var vexNum = vertices.count
+var edgeNum = edge.count
+let graphBFS = Graph(numberofVertices: vexNum, numberofEdges: edgeNum, vertexname: vertices, edges: edge)
+
+graphBFS.printans()
+graphBFS.BFS()
+
+//output
+//Matrix Graph:
+//0 0 1 1 0 1 0 
+//0 0 1 0 0 0 0 
+//1 1 0 1 0 0 0 
+//1 0 1 0 0 0 0 
+//0 0 0 0 0 0 1 
+//1 0 0 0 0 0 1 
+//0 0 0 0 1 1 0 
+//BFS: A C D F B G E 
