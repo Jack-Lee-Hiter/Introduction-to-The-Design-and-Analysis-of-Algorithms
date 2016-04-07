@@ -1,0 +1,19 @@
+import UIKit
+//Swift实现插入排序
+func InsertionSort(input:[Int]) -> [Int]{
+    var array = input
+    for i in 1...input.count-1 {
+        let temp = array[i]
+        var j = i - 1
+        while j >= 0 && array[j] > temp {
+            array[j+1] = array[j]
+            j = j - 1
+        }
+        array[j+1] = temp
+    }
+    return array
+}
+
+let n = InsertionSort([4,2,1,9,8,7,6,3,1,0,8])
+
+//output:[0, 1, 1, 2, 3, 4, 6, 7, 8, 8, 9]
