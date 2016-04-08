@@ -1,0 +1,35 @@
+mport UIKit
+//Swift实现希尔排序
+
+//将一个字符串拆分为一串字符
+func departWord(input:String) -> [Character]{
+    var output = [Character]()
+    for i in input.characters{
+        output.append(i)
+    }
+    return output
+}
+//对字符进行希尔排序
+func ShellSort(input:Array<Character>) ->String{
+    let n = input.count
+    var array = input
+    var gap = 1
+    while gap < n/3 {
+        gap = gap * 3 + 1   //生成步长数列1 4 13 40 121...
+    }
+    for ; gap > 0 ; gap /= 3{
+        for i in gap...n-1 {
+            let temp = array[i]
+            var j = Int()
+            for j = i - gap; j >= 0 && array[j] > temp; j = j - gap{
+                array[j + gap] = array[j]
+            }
+            array[j + gap] = temp
+        }
+    }
+    return String(array)
+}
+let n = departWord("SHELLSORTISUSEFUL")
+let ans = ShellSort(n)
+
+//output：EEFHILLLORSSSSTUU
