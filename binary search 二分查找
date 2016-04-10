@@ -1,0 +1,20 @@
+import UIKit
+//二分查找 折半查找
+func BinarySearch(source:[Int],target:Int) -> Int{
+    var start = 0
+    var end = source.count - 1
+    
+    while start <= end {
+        let temp = (start + end) / 2
+        if target == source[temp]{
+            return temp
+        }else if target < source[temp]{
+            end = temp - 1
+        }else{
+            start = temp + 1
+        }
+    }
+    return -1
+}
+
+let test = BinarySearch([3,14,27,31,39,42,55,70,74,81,85,93,98],target:70)
