@@ -18,3 +18,4 @@ func BinarySearch(source:[Int],target:Int) -> Int{
 }
 
 let test = BinarySearch([3,14,27,31,39,42,55,70,74,81,85,93,98],target:70)
+//output:7
