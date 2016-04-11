@@ -1,0 +1,13 @@
+import UIKit
+//实现约瑟夫环
+func Josephus(total:Int, out:Int) -> Int{
+    let n = total
+    let m = out
+    var temp = 0    //初始化f[1] = 0
+    for i in 1...n {
+        temp = (temp + m) % i       //f[i] = (f[i-1] + m) % i
+    }
+    return temp + 1
+}
+let liveMan = Josephus(6, out: 2)
+//output:5
