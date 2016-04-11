@@ -1,0 +1,63 @@
+import UIKit
+//实现Lomuto划分
+func LomutoPartition(input:[Int]) -> (s:Int, newArray:[Int]) {
+    var array = input
+    let p = array[0]
+    var s = 0
+    for i in 1...array.count-1{
+        if p > array[i]{
+            s = s + 1
+            let temp = array[i]
+            array[i] = array[s]
+            array[s] = temp
+        }
+    }
+    if s != 0{
+        swap(&array[0], &array[s])
+    }
+    let newArray = array
+    return (s,newArray)
+}
+//基于Lomuto划分的递归算法解决选择问题
+func QuickSelect(source:[Int],target:Int) -> Int {
+    if target < 1 || target > source.count{
+        return -1
+    }
+    var (s,newSource) = LomutoPartition(source)
+    let num = source.count
+    //print("the split location is \(s)")
+    //print("the new array is \(newSource)")
+   // print("target is \(target)")
+    if s == target - 1{
+        return newSource[s]
+    }else if s > target - 1{
+        if s-1 != 0{
+            return QuickSelect(Array(newSource[0...s-1]), target: target)
+        }else{
+            return newSource[0]
+        }
+    }else{
+        if s+1 != num-1{
+            return QuickSelect(Array(newSource[s+1...num-1]), target: target - 1 - s)
+        }else{
+            return newSource[s+1]
+        }
+    }
+}
+let ans = QuickSelect([5,1,9,7,2,4,3,6,10,0,11,8,7,12], target:14)
+//中间运行结果
+//the split location is 5
+//the new array is [0, 1, 2, 4, 3, 5, 9, 6, 10, 7, 11, 8, 7, 12]
+//target is 14
+//the split location is 4
+//the new array is [7, 6, 7, 8, 9, 10, 11, 12]
+//target is 8
+//the split location is 0
+//the new array is [10, 11, 12]
+//target is 3
+//the split location is 0
+//the new array is [11, 12]
+//target is 2
+//
+//
+//output：12
