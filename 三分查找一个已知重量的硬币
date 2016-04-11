@@ -1,0 +1,41 @@
+import UIKit
+//实现三分查找一个已知重量的硬币
+var mark = 0
+func ThirdFind(input:[Int]) -> Int{
+    let n = input.count
+    
+    if n <= 3{
+        for i in 0...n-1{
+            if input[i] == 2 {
+                mark = mark + i
+                return mark
+            }
+        }
+    }else{
+        var num = n / 3
+        var sum1 = 0
+        var sum2 = 0
+        num = num + 1
+        for i in 0...num-1{
+            sum1 = sum1 + input[i]
+            sum2 = sum2 + input[i+num]
+        }
+        if sum1 > sum2{
+            mark = mark + 0
+            return ThirdFind(Array(input[0...num-1]))
+        }else if sum1 < sum2{
+            mark = mark + num
+            ThirdFind(Array(input[num...2*num-1]))
+            return mark
+            
+        }else{
+            mark = mark + 2 * num
+            ThirdFind(Array(input[2*num...n-1]))
+            return mark
+        }
+    }
+    return -1
+}
+
+let test = ThirdFind([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1])
+//output: 32
