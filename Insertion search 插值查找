@@ -1,0 +1,22 @@
+import UIKit
+//实现插值查找,只针对于有序数组
+//在Robert Sedgewick对比中，对于较小的文件，二分查找效率更好，对于更大的文件插值查找效率更高
+func InsertSearch(n:[Int],target:Int) -> Int{
+    var start = 0
+    var end = n.count - 1
+    
+    while start <= end {
+        //不能把(end - start) / (n[end] - n[start])单独拿出来作为因子k，因为k可能小于1，此时k === 0，插值查找也就变成了顺序查找，效率大大降低
+        let temp = start + (target - n[start]) * (end - start) / (n[end] - n[start])
+        if target == n[temp] {
+            return temp
+        }else if target > n[temp] {
+            start = temp + 1
+        }else{
+            end = temp - 1
+        }
+    }
+    return -1
+}
+
+let test = InsertSearch([1,2,4,5,7,9,11,13,15,16,17,18,19,21,25,29,30], target: 18)
