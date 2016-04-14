@@ -1,0 +1,72 @@
+import UIKit
+//实现归并排序算法
+func Mergesort(A:[Int]) -> [Int] {
+    var array = A
+    
+    if array.count < 2 {
+        return array
+    }
+    
+    let pivot = array.count / 2
+    let leftArray = Array(array[0...pivot-1])
+    let rightArray = Array(array[pivot...array.count-1])
+    
+    return Merge(Mergesort(leftArray), B:Mergesort(rightArray))
+}
+func Merge(A:[Int], B:[Int]) -> [Int] {
+    var leftIndex = 0
+    var rightIndex = 0
+    var outputArray = [Int]()
+    
+    while leftIndex < A.count && rightIndex < B.count {
+        if A[leftIndex] <= B[rightIndex] {
+            outputArray.append(A[leftIndex])
+            leftIndex = leftIndex + 1
+        }else {
+            outputArray.append(B[rightIndex])
+            rightIndex = rightIndex + 1
+        }
+    }
+    
+    if leftIndex == A.count {
+        outputArray = outputArray + B[rightIndex..<B.count]
+    }else {
+        outputArray = outputArray + A[leftIndex..<A.count]
+    }
+    return outputArray
+}
+let test = Mergesort([8,3,2,9,7,1,5,4])
+
+import UIKit
+//分治算法实现查找数组中最大元素的位置
+func MaxIndex(A:[Int],l:Int,r:Int) -> Int {
+    
+    let pivot = (l + r) / 2
+    if r-l == 1{
+        return l
+    }else{
+        let temp1 = MaxIndex(A,l:l,r:pivot)
+        let temp2 = MaxIndex(A,l:pivot,r:r)
+        if A[temp1] < A[temp2] {
+            return temp2
+        }else {
+            return temp1
+        }
+    }
+}
+let n = MaxIndex([5,7,9,3,4,8,6,2,0,1],l:0,r:9)
+
+import UIKit
+//分治算法实现幂运算
+func Power(a:Int, n:Int) -> Int{
+    if n == 1{
+        return a
+    }else{
+        if n%2 == 0{
+            return Power(a, n: n/2) * Power(a, n: n/2)
+        }else{
+            return Power(a, n: n/2) * Power(a, n: n/2) * a
+        }
+    }
+}
+let m = Power(2, n: 6)
