@@ -1,0 +1,37 @@
+import UIKit
+//交换两元素位置
+func swapTwoValues<T:Comparable>(inout a:T, inout _ b:T){
+    let temp = a
+    a = b
+    b = temp
+}
+//霍尔划分
+func Hoare<T:Comparable>(inout a:[T], low: Int, high: Int) -> Int{
+    let pivot = a[low]
+    var i = low
+    var j = high + 1
+    
+    repeat{
+        repeat {
+            i = i + 1               //从第一个位置开始取最左侧第一个大于等于 pivot 的位置
+        } while a[i] < pivot
+        repeat {
+            j = j - 1               //从第一个位置开始取最左侧第一个大于等于 pivot 的位置
+        } while a[j] > pivot
+        swapTwoValues(&a[i],&a[j])
+    }while i < j
+    swapTwoValues(&a[i], &a[j])     //当i>=j撤销最后一次交换
+    swapTwoValues(&a[low], &a[j])
+    return j
+}
+//快排
+func QuickSort<T:Comparable>(inout a:[T], low: Int, high: Int){
+    if low < high {
+        let s = Hoare(&a, low: low, high: high)
+        QuickSort(&a, low: low, high: s)
+        QuickSort(&a, low: s+1, high: high)
+    }
+}
+
+var list = [ 5,3,1,9,8,2,4,7 ]
+QuickSort(&list, low: 0, high: list.count - 1)
