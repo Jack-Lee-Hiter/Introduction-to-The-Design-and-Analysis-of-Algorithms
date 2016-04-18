@@ -1,0 +1,129 @@
+import UIKit
+//定义一个平方运算
+extension Double{
+    var power:Double{return self * self}
+}
+//使用合并排序对点的x值进行升序归并排序
+func MergesortX(A:Array<Array<Double>>) -> Array<Array<Double>>{
+    var array = A
+    if array.count < 2 {
+        return array
+    }
+    let pivot = array.count / 2
+    let leftArray = Array(array[0...pivot-1])
+    let rightArray = Array(array[pivot..<array.count])
+    return MergeX(MergesortX(leftArray),B: MergesortX(rightArray))
+}
+func MergeX(A:Array<Array<Double>>, B:Array<Array<Double>>) -> Array<Array<Double>>{
+    var output = [[Double]]()
+    var leftIndex = 0
+    var rightIndex = 0
+    
+    while leftIndex < A.count && rightIndex < B.count {
+        if A[leftIndex][0] < B[rightIndex][0]{
+            output.append(A[leftIndex])
+            leftIndex = leftIndex + 1
+        }else if A[leftIndex][0] >= B[rightIndex][0]{
+            output.append(B[rightIndex])
+            rightIndex = rightIndex + 1
+        }
+    }
+    
+    if leftIndex == A.count {
+        output += B[rightIndex..<B.count]
+    }else{
+        output += A[leftIndex..<A.count]
+    }
+    return output
+}
+//使用合并排序对点的y值进行降序归并排序
+func MergesortY(A:Array<Array<Double>>) -> Array<Array<Double>>{
+    var array = A
+    if array.count < 2 {
+        return array
+    }
+    let pivot = array.count / 2
+    let leftArray = Array(array[0...pivot-1])
+    let rightArray = Array(array[pivot..<array.count])
+    return MergeY(MergesortY(leftArray),B: MergesortY(rightArray))
+}
+func MergeY(A:Array<Array<Double>>, B:Array<Array<Double>>) -> Array<Array<Double>>{
+    var output = [[Double]]()
+    var leftIndex = 0
+    var rightIndex = 0
+    
+    while leftIndex < A.count && rightIndex < B.count {
+        if A[leftIndex][1] > B[rightIndex][1]{
+            output.append(A[leftIndex])
+            leftIndex = leftIndex + 1
+        }else{
+            output.append(B[rightIndex])
+            rightIndex = rightIndex + 1
+        }
+    }
+    
+    if leftIndex == A.count {
+        output += B[rightIndex..<B.count]
+    }else{
+        output += A[leftIndex..<A.count]
+    }
+    return output
+}
+//使用分治法解决最近对问题
+func EfficientClosestPair(P:[[Double]],Q:[[Double]]) -> Double{
+    var dminsq = Double()
+    if P.count == 2{
+            return sqrt((P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power)
+    }else if P.count == 3{
+        let temp1 = (P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power
+        let tmep2 = (P[2][0] - P[0][0]).power + (P[2][1] - P[0][1]).power
+        let temp3 = (P[2][0] - P[1][0]).power + (P[2][1] - P[1][1]).power
+        var temp = min(temp1, tmep2)
+        temp = min(temp, temp3)
+        return sqrt(temp)
+    }else{
+        var pivot = P.count / 2, n = P.count
+        var P1 = [[Double]](), Q1 = [[Double]](), Pr = [[Double]](), Qr = [[Double]]()
+        
+        P1 = Array(P[0...pivot-1])
+        Q1 = Array(Q[0...pivot-1])
+        Pr = Array(P[pivot...n-1])
+        Qr = Array(Q[pivot...n-1])
+        
+        let d1 = EfficientClosestPair(P1, Q: Q1), dr = EfficientClosestPair(Pr, Q: Qr)
+        let d = min(d1, dr)
+        
+        var S = Array<Array<Double>>()
+        var m = Double()
+        if P.count % 2 == 0{
+            pivot = pivot - 1
+        }
+        m = P[pivot][0]
+        for i in 0...Q.count-1 {
+            if abs(Q[i][0] - m) < d{
+                S.append(Q[i])
+            }
+        }
+        dminsq = d.power
+      
+
+        if S.count > 2 {
+            for i in 0...S.count - 2{
+                var k = i + 1
+                while k <= S.count - 1 && (S[k][1]-S[i][1]).power < dminsq{
+                    dminsq = min((S[k][0]-S[i][0]).power+(S[k][1]-S[i][1]).power, dminsq)
+                    k = k + 1
+                }
+            }
+        }else if S.count == 2{
+            dminsq = min((S[1][0]-S[0][0]).power+(S[1][1]-S[0][1]).power, dminsq)
+        }
+
+    }
+    return sqrt(dminsq)
+}
+var A:[[Double]]
+    = [[3.7,2.7],[6.9,10.2],[10.5,6.3],[2.0,5.2],[7.6,9.6],[6.4,6.8],[8.9,6.3],[4.8,9.9],[3.1,6.1],[2.3,5.8],[7.6,8.1],[5.9,3.7],[4.2,4.1],[4.7,3.9],[5.7,2.6],[3.2,3.0]]
+var P = MergesortX(A)
+var Q = MergesortY(A)
+var ans = EfficientClosestPair(P, Q: Q)
