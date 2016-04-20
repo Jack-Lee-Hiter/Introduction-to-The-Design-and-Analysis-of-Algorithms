@@ -1,0 +1,58 @@
+//实现求出一个数组中邻接次数最多的等值元素
+import UIKit
+//先使用归并算法对数组进行预排序
+func MergeSort(A:[Int]) -> [Int]{
+    var array = A
+    if array.count < 2 {
+        return array
+    }
+    
+    let pivot = array.count / 2
+    let leftArray = Array(array[0...pivot-1])
+    let rightArray = Array(array[pivot...array.count-1])
+    return Merge(MergeSort(leftArray),B: MergeSort(rightArray))
+    
+}
+func Merge(A:[Int], B:[Int])->[Int]{
+    var leftIndex = 0
+    var rightIndex = 0
+    var outputArray = [Int]()
+    
+    while leftIndex < A.count && rightIndex < B.count{
+        if A[leftIndex] <= B[rightIndex]{
+            outputArray.append(A[leftIndex])
+            leftIndex = leftIndex + 1
+        }else{
+            outputArray.append(B[rightIndex])
+            rightIndex = rightIndex + 1
+        }
+    }
+    
+    if leftIndex == A.count {
+        outputArray = outputArray + B[rightIndex...B.count-1]
+    }else{
+        outputArray = outputArray + A[leftIndex...A.count-1]
+    }
+    return outputArray
+}
+//对预排序后的数组进行模式计算
+func PresortMode(A:[Int]) -> Int {
+    var modeFrequency = 0                   //目前为止求出的最高频率
+    var i = 0
+    var modelValue = 0
+    while i <= A.count-1 {
+        var runlength = 1, runvalue = A[i]
+        while i + runlength <= A.count-2 && A[i + runlength] == runvalue{
+            runlength = runlength + 1
+        }
+        if runlength > modeFrequency{
+            modeFrequency = runlength
+            modelValue = runvalue
+        }
+        i = i + runlength
+    }
+    return modelValue
+}
+var A = [10,9,8,5,6,3,22,54,35,78,01,85,42,96,5,4,79,5,2,3,654,478,88,5,441,2,24,41,23,36,8,74,25,48,4521,1,5,57,741,32,5,7,78,5,11,23,5,6,98,8,9,87,474,68,52,14,878,55,1,55,5,454,2,52,5,45,41,2,55,9,6,5,41,74,75,5,2,2,455,5,2,14,455,5,2,21,45,54]
+let B = MergeSort(A)
+let ans = PresortMode(B)
