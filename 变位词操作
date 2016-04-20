@@ -1,0 +1,69 @@
+import UIKit
+//预排序实现查找数组中的变位词  比如 ate eat tea即为一组变位词
+
+//首先将输入的所有单词按照单词中字母的字典序进行排序，比如eat->aet, tea->aet
+func change(A:[String]) -> [String] {
+    var array = [String]()
+    for i in A {
+        var temp = [Character]()
+        for j in i.characters{
+            temp.append(j)
+        }
+        temp = temp.sort(){$0<$1}
+        array.append(String(temp))
+    }
+    return array
+}
+//对数组中的所有单词进行字典序排序，输出结果为排序后的数组以及排序后的数组各单词与原数组中单词的对应位置
+func ArraySort<T:Comparable>(A:[T])->(ans:[T],sequence:[Int]){
+    var array = A
+    var sequence = [Int](count:A.count,repeatedValue:0)
+    for i in 0...array.count-2{
+        for j in i+1...array.count-1{
+            if array[i] <= array[j]{
+                sequence[j] = sequence[j] + 1
+            }else{
+                sequence[i] = sequence[i] + 1
+            }
+        }
+    }
+    for i in 0...array.count-1{
+        array[sequence[i]] = A[i]
+    }
+    return (array,sequence:sequence)
+}
+//对预排序后的结果查找所有等值元素，并按照之前的对应位置向量找到原始数组中的对应输入单词
+func findWord(A:[String]) -> [String]{
+    var output = [String]()
+    let tempArray = change(A)
+    let sortedArray = ArraySort(tempArray)
+    let findArray = sortedArray.0
+    let location = sortedArray.1
+    
+    var i = 0
+    var sameWordLocation = [Int]()
+    while i <= findArray.count-2{
+        var  runlength = 1, runvalue = findArray[i]
+        while i+runlength <= findArray.count-1 && findArray[i+runlength] == runvalue{
+            runlength = runlength + 1
+        }
+        if runlength > 1{
+            for j in i...i+runlength-1{
+                sameWordLocation.append(j)
+            }
+        }
+        i = i + runlength
+    }
+    for i in sameWordLocation{
+        for j in 0...location.count-1{
+            if location[j] == i{
+                output.append(A[j])
+            }
+        }
+    }
+    return output
+}
+
+var A = ["soht","host","abc","acd","silent","bda","agc","dha","fdji","jfd","bad","tea","ate","eat","shot","listen"]
+let new = findWord(A)
+//output:["bda", "bad", "tea", "ate", "eat", "silent", "listen", "soht", "host", "shot"]
