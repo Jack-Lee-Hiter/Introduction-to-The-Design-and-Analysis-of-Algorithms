@@ -42,7 +42,7 @@ func PresortMode(A:[Int]) -> Int {
     var modelValue = 0
     while i <= A.count-1 {
         var runlength = 1, runvalue = A[i]
-        while i + runlength <= A.count-2 && A[i + runlength] == runvalue{
+        while i + runlength <= A.count && A[i + runlength] == runvalue{
             runlength = runlength + 1
         }
         if runlength > modeFrequency{
