@@ -1,0 +1,32 @@
+import UIKit
+//利用实现自底向上实现堆排序
+func HeapSort<T:Comparable>(A:[T]) -> [T]{
+    var output = [T]()
+    var array = A
+    for _ in 0...A.count-1{
+        let n = array.count
+        for i in (0...(n-1)/2).reverse(){
+            var k = i, v = array[k], heap = false
+            while !heap && 2*k <= n-1{
+                var j = 2*k
+                if j < n-1{     //存在两个子女
+                    if array[j] < array[j+1]{   //选出更大的那个子女
+                        j = j+1
+                    }
+                }
+                if v >= array[j]{
+                    heap = true
+                }else{
+                    array[k] = array[j]
+                    k = j
+                }
+            }
+            array[k] = v
+        }
+        let k = array.removeAtIndex(0)
+        output.insert(k, atIndex: 0)
+    }
+    return output
+}
+var A = [2,6,5,8,9,7,10]
+let m = HeapSort(A)
