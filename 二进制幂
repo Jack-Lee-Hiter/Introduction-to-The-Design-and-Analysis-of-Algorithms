@@ -1,0 +1,45 @@
+import UIKit
+//二进制幂，效率是对数级别的，远好于蛮力算法
+//从右至左二进制幂
+func LeftRightBinaryExponentiation(a:Int, _ b:Int) -> Int{
+    var binaryArray = [Int]()
+    var temp = b
+    //首先将需要的计算的幂化作一个二进制数
+    while temp > 0{
+        binaryArray.insert(temp % 2, atIndex: 0)
+        temp = temp / 2
+    }
+    //计算幂
+    var product = a
+    for i in (1...binaryArray.count-1){
+        product = product * product
+        if binaryArray[i] == 1{
+            product = product * a
+        }
+    }
+    return product
+}
+func RightLeftBinaryExponentiation(a:Int, _ b:Int) -> Int {
+    var binaryArray = [Int]()
+    var temp = b
+    //首先将需要的计算的幂化作一个倒序的二进制数，因为要实现从右往左算法，直接生成倒序二进制数方便后续代码实现
+    while temp > 0{
+        binaryArray.append(temp % 2)
+        temp = temp / 2
+    }
+    var term = a, product = Int()
+    if binaryArray[0] == 1{
+        product = a
+    }else{
+        product = 1
+    }
+    for i in 1...binaryArray.count-1{
+        term = term * term
+        if binaryArray[i] == 1{
+            product = product * term
+        }
+    }
+    return product
+}
+let test = LeftRightBinaryExponentiation(3, 13)      //计算3^13
+let test2 = RightLeftBinaryExponentiation(3, 13)
