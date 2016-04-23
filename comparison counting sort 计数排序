@@ -1,0 +1,23 @@
+import UIKit
+//计数排序
+func ComparisonCountingSort(A:[Int]) -> [Int]{
+    var Count = [Int](count:A.count,repeatedValue:0)
+    var output = [Int](count:A.count,repeatedValue:0)
+    let n = A.count
+    for i in 0...n-2{
+        for j in i+1...n-1{
+            if A[i] < A[j]{
+                Count[j] = Count[j] + 1
+            }else{
+                Count[i] = Count[i] + 1
+            }
+        }
+    }
+    print(Count)
+    for i in 0...n-1{
+        output[Count[i]] = A[i]
+    }
+    return output
+}
+
+let n = ComparisonCountingSort([62,31,94,96,19,47])
