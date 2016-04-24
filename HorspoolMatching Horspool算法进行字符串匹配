@@ -1,0 +1,53 @@
+import UIKit
+//将字符串转换为一个字符数组
+func StringShift(A:String) -> [Character]{
+    var output = [Character]()
+    for i in A.characters{
+        output.append(i)
+    }
+    return output
+}
+//用Horspool算法和Boyer-Moore算法填充移动表
+func ShiftTable(A:[Character]) -> [Character:Int]{
+    var P = A, Table = [Character:Int](),temp = [Int]()
+    let m = P.count
+
+    //按照UTF-8生成一个字母表，并且加入space键，用于存储可能出现字符的字母表
+    for i in 65...90{
+        temp.append(i)
+    }
+    temp.append(32)         //加入空格键
+    let Alphabet = temp.map({Character(UnicodeScalar($0))})
+    
+    //先将所有字母对应为移动的长度为待匹配字符的长度m
+    for i in 0...Alphabet.count-1{
+        Table[Alphabet[i]] = m
+    }
+    
+    for j in 0...m-2{
+        Table[P[j]] = m-1-j
+    }
+    return Table
+}
+//实现Horspool字符串匹配算法
+//输出：第一个匹配子串最左端字符的下标，如果没有匹配子串，则返回-1
+func HorspoolMatching(target:String, _ source: String) -> Int{
+    var P = StringShift(target), T = StringShift(source)
+    var Tabel = ShiftTable(P)       //生成移动表
+    var i = P.count-1, n = T.count, m = P.count
+    while i <= n-1{
+        var k = 0           //匹配字符串的个数
+        while k <= m-1 && P[m-1-k] == T[i-k]{
+            k = k + 1
+        }
+        if k == m{
+            return i-m+1
+        }else{
+            i = i + Tabel[T[i]]!
+        }
+    }
+    return -1
+}
+let source = "JIM SAW ME IN A BARBERSHOP"
+let target = "BARBER"
+let m = HorspoolMatching(target, source)
