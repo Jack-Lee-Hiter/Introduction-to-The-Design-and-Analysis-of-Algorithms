@@ -1,0 +1,122 @@
+import UIKit
+/* Thanks to Wikipedia https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm
+ */
+/*使用Swift实现Boyer Moore算法
+ *输入为搜索的文本字符串以及模式字符串，输出为所有匹配的字符串的首位置构成的数组
+ */
+//将输入字符串转换为一个字符数组
+func StringShift(A:String) -> [Character]{
+    var output = [Character]()
+    for i in A.characters{
+        output.append(i)
+    }
+    return output
+}
+/*生成一个坏字符表，移动距离分为两种
+ *字符不在模式中，移动的长度为模式的长度；
+ *字符在模式中，移动的长度为模式中最右边对应待检测字符所对应的模式中存在的此字符到最后一个字符的距离 
+ *对于BARBER，除了E,B,R,A的单元格分别为1，2，3，4之外，所有字符移动的单元格均为6
+ */
+func BadCharsTable(pattern:[Character]) -> [Character:Int]{
+    var Table = [Character:Int](), temp = [Int](32...126)
+    let P = pattern, m = P.count
+    //生成一个原始移动表，对应字符为从SPACE到~键，使用UTF-8对应表，所有移动位置赋值为m
+    let Alphabet = temp.map({Character(UnicodeScalar($0))})
+    for i in 0...Alphabet.count-1{
+        Table[Alphabet[i]] = m
+    }
+    //更改pattern中存在字符对应的移动距离
+    for j in 0...m-2{
+        Table[P[j]] = m-1-j
+    }
+    return Table
+}
+/*生成一个好后缀表
+ */
+func GoodSuffixTable(pattern:[Character]) -> [Int]{
+    let m = pattern.count
+    var Table = [Int](count:m,repeatedValue:0)
+    var lastPrefixPosition = pattern.count, i = m - 1
+    while i >= 0{
+        if isPrefix(pattern, i) {
+            lastPrefixPosition = i;
+        }
+        Table[m - 1 - i] = lastPrefixPosition - i + m - 1;
+        i = i - 1
+    }
+    for i in 0...m-2{
+        let slen = suffixLength(pattern, i)
+        Table[slen] = m - 1 - i + slen
+    }
+    return Table
+}
+//判断模式后面几个字符是否等于模式前面相应长度的字符
+func isPrefix(pattern:[Character], _ p:Int) -> Bool{
+    let m = pattern.count
+    var j = 0
+    for i in p...m-1{
+        if pattern[i] != pattern[j]{
+            return false
+        }
+        j = j + 1
+    }
+    return true
+}
+//判断前缀以及后缀的重复长度
+func suffixLength(pattern:[Character], _ p:Int) -> Int{
+    let m = pattern.count
+    var len = 0, i = p, j = m - 1
+    while i >= 0 && pattern[i] == pattern[j] {
+        len += 1
+        i = i - 1
+        j = j - 1
+    }
+    return len
+}
+
+func indexOf(source:String, _ target:String) -> [Int]{
+    /*如果输入输出不区分大小写，则加入如下一句话，并对Original和pattern重新赋值即可
+     *var lowcaseSource = source.lowercaseString, lowcaseTarget = target.lowercaseString
+     */
+    let Original = StringShift(source), pattern = StringShift(target)
+    var locationSet = [Int]()
+    if pattern.count == 0{
+       return [-1]
+    }
+    //只查找一个字符使用蛮力法即可
+    if pattern.count == 1{
+        for i in 0...Original.count-1{
+            if Original[i] == pattern[0]{
+                locationSet.append(i)
+            }
+        }
+    }else{
+        var badTable = BadCharsTable(pattern)
+        var goodTable = GoodSuffixTable(pattern)
+        var i = pattern.count - 1
+        while i < Original.count{
+            var j = pattern.count - 1
+            while i < Original.count && pattern[j] == Original[i]{
+                if j == 0 {
+                    locationSet.append(i)
+                    i += pattern.count + 1
+                    j += 1
+                }
+                i = i - 1
+                j = j - 1
+            }
+            if i < Original.count{
+                i = i + max(goodTable[pattern.count - 1 - j],badTable[Original[i]]!)
+            }
+        }
+    }
+    if locationSet.count > 0{
+        return locationSet
+    }else{
+        return [-1]
+    }
+}
+
+let source = "here is a simple example"
+let target = "example"
+let m = indexOf(source, target)
