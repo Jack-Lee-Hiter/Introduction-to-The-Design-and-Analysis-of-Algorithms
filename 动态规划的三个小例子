@@ -1,0 +1,46 @@
+import UIKit
+//币值最大化问题
+//在满足所选硬币不相邻的情况下，从一排硬币中选择最大金额的硬币
+func CoinRow(A:[Int]) -> Int{
+    var array = [Int](count:A.count+1,repeatedValue:0)
+    array[0] = 0
+    array[1] = A[0]
+    for i in 2...A.count{
+        array[i] = max(A[i-1]+array[i-2],array[i-1])
+    }
+    return array.removeLast()
+}
+let n = CoinRow([5,1,2,10,6,2])
+
+import UIKit
+//应用动态规划算法求解找零问题，找出使硬币加起来等于n时所需最少的硬币数目
+//输入正整数n，以及用于表示币值的递增整数数组D
+//输出总金额等于n的硬币最少的数目
+func ChangeMaking(D:[Int],n:Int) -> Int{
+    var F = [Int](count:n+1,repeatedValue:0)
+    for i in 1...n{
+        var temp = 100000, j = 0
+        while j <= D.count-1 && i >= D[j]{
+            temp = min(F[i-D[j]], temp)
+            j = j + 1
+        }
+        F[i] = temp + 1
+    }
+    return F.removeLast()
+}
+let n = ChangeMaking([1,3,4], n: 6)
+
+import UIKit
+//利用动态规划算法机器人在n*m模板上所能收集的最大硬币数
+func RobotCoinCollection(C:[[Int]]) -> Int{
+    var F = [[Int]](count:C.count+1,repeatedValue:[Int](count:C[0].count+1,repeatedValue:0))
+    for i in 1...C.count{
+        for j in 1...C[0].count{
+            F[i][j] = max(F[i-1][j],F[i][j-1]) + C[i-1][j-1]
+        }
+    }
+    var temp = F.removeLast()
+    return temp.removeLast()
+}
+let A = [[0,0,0,0,1,0],[0,1,0,1,0,0],[0,0,0,1,0,1],[0,0,1,0,0,1],[1,0,0,0,1,0]]
+let ans = RobotCoinCollection(A)
