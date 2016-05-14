@@ -1,0 +1,49 @@
+import Foundation
+//creat a binary tree
+public class BinaryTree<T:Comparable>{
+    var key: T?
+    var left: BinaryTree?
+    var right: BinaryTree?
+    
+    //add item
+    func addNode(key: T){
+        
+        //check the root of the tree
+        if self.key == nil{
+            self.key = key
+            return
+        }
+        
+        //check the left child tree
+        if key < self.key{
+            
+            if self.left != nil {
+                self.left?.addNode(key)
+            }else{
+                let leftChild: BinaryTree = BinaryTree<T>()
+                leftChild.key = key
+                self.left = leftChild
+            }
+        }
+        
+        //check the right child tree
+        if key > self.key{
+            
+            if self.right != nil{
+                right?.addNode(key)
+            }else{
+                let rightChild: BinaryTree = BinaryTree()
+                rightChild.key = key
+                self.right = rightChild
+            }
+        }
+    }
+}
+
+
+let numberList = [8,5,7,6,9,10,2,3]
+var root = BinaryTree<Int>()
+
+for number in numberList {
+    root.addNode(number)
+}
