@@ -73,11 +73,13 @@ func MergeY(A:Array<Array<Double>>, B:Array<Array<Double>>) -> Array<Array<Doubl
 func EfficientClosestPair(P:[[Double]],Q:[[Double]]) -> Double{
     var dminsq = Double()
     if P.count == 2{
-            return sqrt((P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power)
+        var temp1 = sqrt((P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power)
+        var temp2 = sqrt((Q[1][0] - Q[0][0]).power + (Q[1][1] - Q[0][1]).power)
+        return min(temp1, temp2)
     }else if P.count == 3{
-        let temp1 = (P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power
-        let tmep2 = (P[2][0] - P[0][0]).power + (P[2][1] - P[0][1]).power
-        let temp3 = (P[2][0] - P[1][0]).power + (P[2][1] - P[1][1]).power
+        let temp1 = min((P[1][0] - P[0][0]).power + (P[1][1] - P[0][1]).power, (Q[1][0] - Q[0][0]).power + (Q[1][1] - Q[0][1]).power)
+        let tmep2 = min((P[2][0] - P[0][0]).power + (P[2][1] - P[0][1]).power, (Q[2][0] - Q[0][0]).power + (Q[2][1] - Q[0][1]).power)
+        let temp3 = min((P[2][0] - P[1][0]).power + (P[2][1] - P[1][1]).power, (Q[2][0] - Q[1][0]).power + (Q[2][1] - Q[1][1]).power)
         var temp = min(temp1, tmep2)
         temp = min(temp, temp3)
         return sqrt(temp)
@@ -95,9 +97,7 @@ func EfficientClosestPair(P:[[Double]],Q:[[Double]]) -> Double{
         
         var S = Array<Array<Double>>()
         var m = Double()
-        if P.count % 2 == 0{
-            pivot = pivot - 1
-        }
+        
         m = P[pivot][0]
         for i in 0...Q.count-1 {
             if abs(Q[i][0] - m) < d{
@@ -105,8 +105,8 @@ func EfficientClosestPair(P:[[Double]],Q:[[Double]]) -> Double{
             }
         }
         dminsq = d.power
-      
-
+        
+        
         if S.count > 2 {
             for i in 0...S.count - 2{
                 var k = i + 1
@@ -118,12 +118,12 @@ func EfficientClosestPair(P:[[Double]],Q:[[Double]]) -> Double{
         }else if S.count == 2{
             dminsq = min((S[1][0]-S[0][0]).power+(S[1][1]-S[0][1]).power, dminsq)
         }
-
+        
     }
     return sqrt(dminsq)
 }
 var A:[[Double]]
-    = [[3.7,2.7],[6.9,10.2],[10.5,6.3],[2.0,5.2],[7.6,9.6],[6.4,6.8],[8.9,6.3],[4.8,9.9],[3.1,6.1],[2.3,5.8],[7.6,8.1],[5.9,3.7],[4.2,4.1],[4.7,3.9],[5.7,2.6],[3.2,3.0]]
+    = [[3.7,2.7],[6.9,10.2],[10.5,6.3],[2.0,5.2],[7.6,9.6],[6.4,6.8],[8.9,6.3],[4.8,9.9],[3.1,6.1],[5.3,5.8],[3.6,8.1],[2.9,3.7],[3.2,4.1],[4.7,3.9]]
 var P = MergesortX(A)
 var Q = MergesortY(A)
 var ans = EfficientClosestPair(P, Q: Q)
